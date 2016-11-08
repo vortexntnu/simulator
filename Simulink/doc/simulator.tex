@@ -1,0 +1,41 @@
+\documentclass[a4paper]{article}
+
+\usepackage{mortenmath}
+
+\title{Vortex ROV simulator}
+\author{Morten Fyhn Amundsen}
+
+\begin{document}
+
+\maketitle
+
+\begin{equation}
+	\V{\dot{\eta}}
+	=
+	\M{J}(\V{\eta})
+	\V{\nu}
+\end{equation}
+
+\begin{equation}
+	\V{\dot{\nu}}
+	=
+	(\M{M}_{RB} + \M{M}_A)^{-1}
+	\left[
+		-
+		\M{C}_{RB}(\V{\nu})\V{\nu}
+		+
+		\M{M}_A \V{\dot{\nu_c}}
+		-
+		\M{C}_A(\V{\nu}_r)\V{\nu}_r
+		-
+		\M{D}(\V{\nu}_r)\V{\nu}_r
+		-
+		\V{g}(\V{\eta})
+		+
+		\V{\tau}
+		+
+		\V{\tau}\sub{ext}
+	\right]
+\end{equation}
+
+\end{document}
