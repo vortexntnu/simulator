@@ -56,7 +56,7 @@ void Dynamics::getConfig()
 
 void Dynamics::updateCurrentNEDVelocityVector()
 {
-  
+  // Test test
 }
 void Dynamics::updateCoriolisMatrices()
 {
