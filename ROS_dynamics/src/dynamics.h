@@ -17,6 +17,8 @@ public:
   Dynamics(unsigned int frequency);
 
   void compute();
+  std::vector getEta();
+  std::vector getNu();
 
 private:
   ros::NodeHandle nh;
