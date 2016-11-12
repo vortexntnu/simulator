@@ -23,6 +23,10 @@ void Simulator::spin()
   {
     ros::spinOnce();
     dynamics.calculate(u);
+    geometry_msgs::pose posemsg = dynamics.getEta();
+    geometry_msgs::twist twistmsg = dynamics.getNu();
+    posePub.publish(posemsg);
+    twistPub.publish(twistmsg);
     rate.sleep();
   }
 }
