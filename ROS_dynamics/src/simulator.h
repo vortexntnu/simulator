@@ -19,7 +19,7 @@ class Simulator()
     ros::Publisher  twistPub;
     ros::Publisher  imuPub;
     ros::Publisher  pressurePub;
-  	Dynamics        dynamics;
+  	Dynamics        *dynamics;
   	arma::vec       u;
 };
 

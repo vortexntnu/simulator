@@ -4,6 +4,7 @@ Simulator::Simulator(unsigned int f)
 {
   frequency = f;
   u = vec(8);
+  dynamics = new Dynamics(f);
   wrenchSub = nh.subscribe("thruster_forces", 10, &Dynamics::thrustCallback, this);
   posePub = nh.advertise<geometry_msgs::pose>("simulated_pose", 10);
   twistPub = nh.advertise<geometry_msgs::twist>("simulated_twist", 10);

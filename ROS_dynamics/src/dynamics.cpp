@@ -19,7 +19,7 @@ Dynamics::Dynamics(unsigned int frequency)
   r_g = vec(3);
   r_b = vec(3);
   Dynamics::getConfig();
-  if(!pinv(T_pinv,T))
+  if(!arma::pinv(T_pinv,T))
     ROS_ERROR("Failed to compute pseudoinverse of thrust config matrix.");
 }
 
@@ -30,8 +30,8 @@ void Dynamics::calculate(arma::vec u)
   Dynamics::updateDampingMatrix();
   Dynamics::updateRestoringForceVector();
   Dynamics::updateRotMatrix();
-  tau = pinv(T)*u;
-  nu_dot = arma::inv(M + M_a)*(tau-C-D-g);
+  tau = arma::pinv(T)*u;
+  nu_dot = arma::inv(M + M_a)*(tau-C*nu-D*nu-g);
   nu = nu + timeStep * nu_dot;
   eta_dot = J_q * nu;
   eta = eta + timeStep * eta_dot;
@@ -56,7 +56,7 @@ void Dynamics::getConfig()
   if (!getParam("rov/centerofgravity",r_g))
     ROS_ERROR("Failed to read centerofgravity from param server.");
   //Vector of quadratic damping parameters
-  if (!getParam("rov/quaddampingvector",qd))
+  if (!getParam("rov/quaddampingvector",dq))
     ROS_ERROR("Failed to read quadratic damping params from param server.");
   // Initial orientation
   if (!getParam("rov/eulerinitial",euler_init))
@@ -66,10 +66,10 @@ void Dynamics::getConfig()
     ROS_ERROR("Failed to read initial position from param server.");
   // Weight of the ROV, m*g
   if (!getParam("rov/weight",W))
-    ROS_ERROR("Failed to Rov mass from param server.");
+    ROS_ERROR("Failed to read Rov mass from param server.");
   // Bouyancy of the ROV, rho*g*M³
   if (!getParam("rov/bouyancy",B))
-    ROS_ERROR("Failed to bouyancy from param server.");
+    ROS_ERROR("Failed to read bouyancy from param server.");
 
   // Algorithm from p32 Fossen
   // Initialize quaternions based on a given euler angle representation
@@ -141,15 +141,15 @@ void Dynamics::updateCoriolisMatrices()
   arma::mat C_a = mat(6,6);
   arma:vec var1 = M_a.submat(1,1,3,3)*nu.subvec(0,2) + M_a.submat(1,4,1,6)*nu.subvec(3,6);
   arma::vec var2 = M_a.submat(4,1,4,6)*nu.subvec(0,2) + M_a.submat(4,4,6,6)*nu.subvec(3,6);
-  C_a=join_cols(join_rows(3x3Zero, -scewsymmetrix(var1)),join_rows(-skewSymmetric(var1), -skewSymmetric(var2)));
+  C_a = arma::join_cols(arma::join_rows(3x3Zero, -scewsymmetrix(var1)),arma::join_rows(-skewSymmetric(var1), -skewSymmetric(var2)));
 
   // Update rigid body coriolis matrix
   arma::mat C_rb = mat(6,6);
   arma:vec var1 = M.submat(1,1,3,3)*nu.subvec(0,2) + M.submat(1,4,1,6)*nu.subvec(3,6);
   arma::vec var2 = M.submat(4,1,4,6)*nu.subvec(0,2) + M.submat(4,4,6,6)*nu.subvec(3,6);
-  C_rb=join_cols(join_rows(3x3Zero, -scewsymmetric(var1)),join_rows(-skewSymmetric(var1), -skewSymmetric(var2)));
+  C_rb = arma::join_cols(arma::join_rows(3x3Zero, -scewsymmetric(var1)),arma::join_rows(-skewSymmetric(var1), -skewSymmetric(var2)));
   // Compute resulting coriolis force
-  C = (C_a + C_rb) * nu;
+  C = (C_a + C_rb);
 }
 
 void Dynamics::updateDampingMatrix()
@@ -162,14 +162,14 @@ void Dynamics::updateDampingMatrix()
   {0, 0, 0, 0, dq(7)*abs(nu(4), 0)}
   {0, dq(8)*abs(nu(1)) + dq(9)*abs(nu(5)), 0, 0, 0, dq(10)*abs(nu(1)) + dq(11)*abs(nu(5))}};
   // Compute total damping force
-  D = (D_l + D_q) * nu;
+  D = (D_l + D_q);
 }
 
 // Update current restoring force vector
 void Dynamics::updateRestoringForceVector()
 {
-  arma::vec f_rest = inv(R_q)*(f_nb + f_ng);
-  arma::vec t__rest = cross(r_g, inv(R_q)*f_ng) + cross(r_b,inv(R_q)*f_nb);
+  arma::vec f_rest = arma::inv(R_q)*(f_nb + f_ng);
+  arma::vec t_rest = arma::cross(r_g, arma::inv(R_q)*f_ng) + arma::cross(r_b,arma::inv(R_q)*f_nb);
   
   for (int i = 0; i < g.n_elem; i ++)
   {
@@ -178,7 +178,7 @@ void Dynamics::updateRestoringForceVector()
       g(i) = f_rest(i);
       continue;
     }
-    g(i) = t__rest(i-f_rest.n_elem);
+    g(i) = t_rest(i-f_rest.n_elem);
   }
   
 }
@@ -198,12 +198,12 @@ void Dynamics::updateRotMatrix()
          {q(3), q(0), -q(1)},
          {-q(2), q(1), q(0)}};
 
-  J_q = join_cols(join_rows(R_q,3x3Zero),join_rows(3x3Zero,T_q));
+  J_q = arma::join_cols(arma::join_rows(R_q,3x3Zero),arma::join_rows(3x3Zero,T_q));
 }
 
 void Dynamics::normaliseQuaternions() 
 {
-  q = normalise(eta.subvec(3,6));
+  q = arma::normalise(eta.subvec(3,6));
   for (int i = 0; i < q.n_elem; i++)
   {
     eta(i+p.n_elem) = q(i);
@@ -214,25 +214,18 @@ void Dynamics::normaliseQuaternions()
 // Return a scew-symmetric matrix representing cross-product operator
 arma::mat Dynamics::skewSymmetric(arma::vec x)
 {
-  arma::mat s = mat(3,3);
-  s(0,0)=0.0;
-  s(0,1)=-x(2);
-  s(0,2)=x(1);
-  s(1,0)=x(2);
-  s(1,1)=0.0;
-  s(1,2)=-x(0);
-  s(2,0)=-x(1);
-  s(2,1)=x(0);
-  s(2,2)=0.0;
+  arma::mat s = {{0.0, -x(2), x(1)},
+                 {x(2), 0.0, -x(0)},
+                 {-x(1), x(0), 0.0}};
   return s;
 }
 
 std::vector getEta()
 {
-  return conv_to<stdvec>::from(eta);
+  return arma::conv_to<stdvec>::from(eta);
 }
 
 std::vector getNu()
 {
-  return conv_to<stdvec>::from(nu);
+  return arma::conv_to<stdvec>::from(nu);
 }
