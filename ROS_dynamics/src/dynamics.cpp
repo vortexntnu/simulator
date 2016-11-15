@@ -5,7 +5,6 @@ Dynamics::Dynamics(unsigned int frequency)
 {
   timeStep = 1.0/frequency;
   // Initialize system matrices as identity
-  // Fix read from yaml
   M_a = mat(6,6,fill::eye);
   M = mat(6,6,fill::eye);
   C = mat(6,6,fill::eye);
@@ -18,6 +17,7 @@ Dynamics::Dynamics(unsigned int frequency)
   nu = vec(6);
   r_g = vec(3);
   r_b = vec(3);
+  qd = vec(12);
   Dynamics::getConfig();
   if(!arma::pinv(T_pinv,T))
     ROS_ERROR("Failed to compute pseudoinverse of thrust config matrix.");
@@ -40,37 +40,42 @@ void Dynamics::calculate(arma::vec u)
 
 void Dynamics::getConfig()
 {
+  //Inertia matrix
+  if (!Dynamics::getMatrixParam(nh,"/physical/inertia", M))
+    ROS_ERROR("Failed to read parameter physical/inertia.");
   //Added mass matrix
-  if (!Dynamics::getMatrixParam(nh,"/rov/addedmass", M_a))
-    ROS_ERROR("Failed to read parameter rov/addedmass.");
+  if (!Dynamics::getMatrixParam(nh,"/physical/added_mass", M_a))
+    ROS_ERROR("Failed to read parameter physical/added_mass.");
   //Linear damping matrix
-  if (!Dynamics::getMatrixParam(nh,"/rov/lineardamping", D_l))
-    ROS_ERROR("Failed to read parameter rov/lineardamping.");
+  if (!Dynamics::getMatrixParam(nh,"/physical/linear_damping", D_l))
+    ROS_ERROR("Failed to read parameter physical/linear_damping.");
   //Thruster config matrix
-  if (!Dynamics::getMatrixParam(nh, "thrusters/configuration_matrix", T))
+  if (!Dynamics::getMatrixParam(nh, "propulsion/thrusters/configuration_matrix", T))
     ROS_ERROR("Failed to read thrust config matrix from param server.");
   //Center of boyancy from CO
-  if (!nh.getParam("rov/centerofboyancy", r_b))
+  if (!nh.getParam("physical/center_of_boyancy", r_b))
     ROS_ERROR("Failed to read center of boyancy from param server.");
   //Center of gravity from CO
-  if (!getParam("rov/centerofgravity",r_g))
+  if (!getParam("physical/center_of_gravity",r_g))
     ROS_ERROR("Failed to read centerofgravity from param server.");
   //Vector of quadratic damping parameters
-  if (!getParam("rov/quaddampingvector",dq))
+  if (!getParam("physical/quad_damping_vector",dq))
     ROS_ERROR("Failed to read quadratic damping params from param server.");
   // Initial orientation
-  if (!getParam("rov/eulerinitial",euler_init))
+  if (!getParam("rov/euler_initial",euler_init))
     ROS_ERROR("Failed to read initial orientation from param server.");
   // Initial position
-  if (!getParam("rov/positioninitial",p))
+  if (!getParam("rov/position_initial",p))
     ROS_ERROR("Failed to read initial position from param server.");
   // Weight of the ROV, m*g
-  if (!getParam("rov/weight",W))
+  if (!getParam("physical/mass_kg",m))
     ROS_ERROR("Failed to read Rov mass from param server.");
   // Bouyancy of the ROV, rho*g*M³
-  if (!getParam("rov/bouyancy",B))
+  if (!getParam("physical/displacement_m3",V))
     ROS_ERROR("Failed to read bouyancy from param server.");
 
+  W = m * g;
+  B = rho * g * V;
   // Algorithm from p32 Fossen
   // Initialize quaternions based on a given euler angle representation
   double phi = euler_init(0);

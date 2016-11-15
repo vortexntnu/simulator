@@ -2,12 +2,15 @@
 #define DYNAMICS_H
 
 #include "ros/ros.h"
-#include <armadillo>
+#include </usr/include/armadillo>
 #include <math.h>
 #include "nav_msgs/Odometry.h"
 #include "geometry_msgs/Wrench.h"
 #include "geometry_msgs/Pose.h"
 #include "vortex_msgs/ThrusterForces.h"
+#define g 9.81
+// density of water [kg/m³] at 20 deg C
+#define rho 998.2071
 
 typedef std::vector<double> stdvec;
 
@@ -64,6 +67,8 @@ private:
   arma::mat          T_q         // Angular velocity rotation matrix
   arma::mat          3x3Zero     // 3x3 zero matrix
 
+  double V;                      // [m³] volume of ROV
+  double m;                      // [kg] mass of ROV
   double W;                      // [N] Weight of ROV
   double B;                      // [N] Buoyancy of ROV
   double timeStep;               // Timestep in the forward euler method
