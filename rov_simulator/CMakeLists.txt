@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 2.8.3)
-project(ROS_dynamics)
+project(rov_simulator)
 
 find_package(catkin REQUIRED COMPONENTS
   cmake_modules
@@ -8,30 +8,18 @@ find_package(catkin REQUIRED COMPONENTS
   vortex_msgs
   nav_msgs
   sensor_msgs
-  dynamic_reconfigure
 )
 
 find_package(Armadillo REQUIRED)
-find_package(GTest REQUIRED)
+#find_package(GTest REQUIRED)
 
 ################################################
 ## Declare ROS messages, services and actions ##
 ################################################
 
-add_service_files(
-  FILES
-  ResetEstimator.srv
-)
 
 generate_messages()
 
-################################################
-## Declare ROS dynamic reconfigure parameters ##
-################################################
-
-generate_dynamic_reconfigure_options(
-  cfg/Controller.cfg
-)
 
 ###################################
 ## catkin specific configuration ##
@@ -39,14 +27,15 @@ generate_dynamic_reconfigure_options(
 
 catkin_package(
   CATKIN_DEPENDS
+  message_runtime
   cmake_modules
   roscpp
   message_generation
-  eigen_conversions
   vortex_msgs
   nav_msgs
   sensor_msgs
-  dynamic_reconfigure
+  DEPENDS
+  Armadillo
 )
 
 ###########
@@ -56,24 +45,23 @@ catkin_package(
 include_directories(
   include
   ${catkin_INCLUDE_DIRS}
-  ${EIGEN_INCLUDE_DIRS}
   ${GTEST_INCLUDE_DIRS}
-  ${dynamic_reconfigure_PACKAGE_PATH}/cmake/cfgbuild.cmake
+  ${Armadillo_INCLUDE_DIRS}
 )
 
-add_executable(dynamics src/dynamics/simulator_node.cpp
-                          src/dynamics/simulator.cpp
-                          src/dynamics/dynamics.cpp
+link_directories(/usr/include /usr/share/Armadillo)
+
+
+add_executable(simulator_dynamics src/simulator_node.cpp
+                          src/simulator.cpp
+                          src/dynamics.cpp
 )
+#set_target_properties(simulator_dynamics PROPERTIES LINKER_LANGUAGE CXX)
 
+add_dependencies(simulator_dynamics ${PROJECT_NAME}_generate_messages_cpp)
 
-add_dependencies(controller ${PROJECT_NAME}_generate_messages_cpp ${PROJECT_NAME}_gencfg)
-add_dependencies(allocator  ${PROJECT_NAME}_generate_messages_cpp)
-add_dependencies(estimator  ${PROJECT_NAME}_generate_messages_cpp)
+target_link_libraries(simulator_dynamics ${catkin_LIBRARIES} ${ARMADILLO_LIBRARIES})
 
-target_link_libraries(controller ${catkin_LIBRARIES})
-target_link_libraries(allocator  ${catkin_LIBRARIES})
-target_link_libraries(estimator  ${catkin_LIBRARIES})
 
 #############
 ## Testing ##

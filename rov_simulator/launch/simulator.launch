@@ -1,0 +1,6 @@
+<launch>
+  <rosparam command="load" file="$(find ROS_dynamics)/config/rov.yaml"/>
+
+  <node name="simulator_dynamics"          pkg="ROS_dynamics" type="simulator_dynamics"          output="screen"/>
+
+</launch>
