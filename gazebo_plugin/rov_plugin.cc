@@ -18,20 +18,16 @@
 #include "gazebo/msgs/msgs.hh"
 #include "gazebo/transport/transport.hh"
 
-namespace gazebo
-{
+namespace gazebo {
 
-  class RovPlugin : public ModelPlugin
-  {
+  class RovPlugin : public ModelPlugin {
     public: RovPlugin(){}
 
-    public: void load(physics::ModelPtr _model, sdf::ElementPtr _sdf)
-    {
+    public: void load(physics::ModelPtr _model, sdf::ElementPtr _sdf) {
   	  //TODO: set up model here
       // Store the model pointer for convenience.
       this->model = _model;
-      if (!ros::isInitialized())
-        {
+      if (!ros::isInitialized()) {
       	  int argc = 0;
       	  char **argv = NULL;
       	  ros::init(argc, argv, "gazebo_client",
@@ -61,8 +57,7 @@ namespace gazebo
     /// \brief Handle an incoming message from ROS
     /// \param[in] _msg A float value that is used to set the velocity
     /// of the Velodyne.
-    public: void OnRosMsg(const geometry_msgs::Pose &_msg)
-    {
+    public: void OnRosMsg(const geometry_msgs::Pose &_msg) {
       pos = math::Vector3(_msg.position.x,_msg.position.y, 
       	_msg.position.z);
       rot = math::Quaternion(_msg.orientation.x,
@@ -71,8 +66,7 @@ namespace gazebo
     }
 
     /// \brief ROS helper function that processes messages
-    private: void QueueThread()
-    {
+    private: void QueueThread() {
       static const double timeout = 0.01;
       while (this->rosNode->ok())
       {
@@ -80,8 +74,7 @@ namespace gazebo
       }
     }
     // Called by the world update start event
-    public: void OnUpdate(const common::UpdateInfo & /*_info*/)
-    {
+    public: void OnUpdate(const common::UpdateInfo & /*_info*/) {
       // Apply a small linear velocity to the model.
       this->model->SetWorldPose(pose,false,false);
     }

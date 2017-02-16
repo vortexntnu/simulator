@@ -29,6 +29,16 @@ gazebo/physics/physics.hh
 -
 stdio.h
 -
+sdf/sdf.hh
+-
+ignition/math/Pose3.hh
+-
+gazebo/common/Plugin.hh
+/home/vegard/kinetic_ws/src/simulator/gazebo_plugin/gazebo/common/Plugin.hh
+gazebo/msgs/msgs.hh
+/home/vegard/kinetic_ws/src/simulator/gazebo_plugin/gazebo/msgs/msgs.hh
+gazebo/transport/transport.hh
+/home/vegard/kinetic_ws/src/simulator/gazebo_plugin/gazebo/transport/transport.hh
 
 /opt/ros/kinetic/include/XmlRpcDecl.h
 ros/macros.h

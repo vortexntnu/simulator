@@ -14,10 +14,10 @@
 
 typedef std::vector<double> stdvec;
 
-class Dynamics
-{
+class Dynamics {
 public:
-  Dynamics(unsigned int frequency, ros::NodeHandle nh);
+  Dynamics(unsigned int frequency, 
+           ros::NodeHandle nh);
 
   void calculate(arma::vec u);
   arma::vec getEta();
@@ -77,8 +77,9 @@ private:
   double timeStep;               // Timestep in the forward euler method
 
   
-  inline bool getMatrixParam(ros::NodeHandle nh, std::string name, arma::mat &X)
-  {
+  inline bool getMatrixParam(ros::NodeHandle nh, 
+                             std::string name, 
+                             arma::mat &X) {
     XmlRpc::XmlRpcValue matrix;
     nh.getParam(name, matrix);
 
@@ -98,21 +99,20 @@ private:
    return true;
   };
 
-  inline bool getVectorParam(ros::NodeHandle nh, std::string name, arma::vec &v)
-  {
+  inline bool getVectorParam(ros::NodeHandle nh, 
+                             std::string name, 
+                             arma::vec &v) {
     stdvec p (v.n_elem,0.0);
     bool success = nh.getParam(name, p);
     v = arma::conv_to<arma::vec>::from(p);
     return success;
   };
 
-  inline double s(double val) 
-  {
+  inline double s(double val) {
     return std::sin(val);
   };
   
-  inline double c(double val)
-  {
+  inline double c(double val) {
     return std::cos(val);
   };
 

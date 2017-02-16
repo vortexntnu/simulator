@@ -1,7 +1,6 @@
 #include "simulator.h"
 
-int main(int argc, char **argv)
-{
+int main(int argc, char **argv) {
   ros::init(argc, argv, "simulator");
   ROS_INFO("Launching node simulator.");
   ros::NodeHandle nh;

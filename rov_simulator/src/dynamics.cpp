@@ -1,8 +1,8 @@
 #include "dynamics.h"
 #include "simulator.h"
 
-Dynamics::Dynamics(unsigned int frequency,ros::NodeHandle nh) : nh(nh)
-{
+Dynamics::Dynamics(unsigned int frequency,
+                   ros::NodeHandle nh) : nh(nh) {
   timeStep = 1.0/frequency;
   // Initialize system matrices as identity
   M_a = arma::mat(6,6,arma::fill::eye);
@@ -32,8 +32,7 @@ Dynamics::Dynamics(unsigned int frequency,ros::NodeHandle nh) : nh(nh)
     ROS_ERROR("Failed to compute pseudoinverse of thrust config matrix.");
 }
 
-void Dynamics::calculate(arma::vec u)
-{
+void Dynamics::calculate(arma::vec u) {
   Dynamics::updateRotMatrix();
   Dynamics::updateCoriolisMatrices();
   Dynamics::updateDampingMatrix();
@@ -57,8 +56,7 @@ void Dynamics::calculate(arma::vec u)
   Dynamics::normaliseQuaternions();
 }
 
-void Dynamics::getConfig()
-{
+void Dynamics::getConfig() {
   //Inertia matrix
   if (!Dynamics::getMatrixParam(nh,"/physical/inertia", M))
     ROS_ERROR("Failed to read parameter physical/inertia.");
@@ -160,8 +158,7 @@ void Dynamics::getConfig()
   f_ng(2) = W;
 }
 
-void Dynamics::updateCoriolisMatrices()
-{
+void Dynamics::updateCoriolisMatrices() {
   //First update added mass coriolis matrix 
   arma::mat C_a = arma::mat(6,6);
   arma::vec var1 = M_a.submat(0,0,2,2)*nu.subvec(0,2) + M_a.submat(0,3,2,5)*nu.subvec(3,5);
@@ -177,8 +174,7 @@ void Dynamics::updateCoriolisMatrices()
   Cor = (C_a + C_rb);
 }
 
-void Dynamics::updateDampingMatrix()
-{
+void Dynamics::updateDampingMatrix() {
   // Update nonlinear damping matrix
   D_q << dq(0)*abs(nu(0)) << 0 << 0 << 0 << 0 << 0 << arma::endr
       << 0 << dq(1)*abs(nu(1)) + dq(2)*abs(nu(5)) << 0 << 0 << dq(3)*abs(nu(1)) + dq(4)*abs(nu(5)) << arma::endr
@@ -191,8 +187,7 @@ void Dynamics::updateDampingMatrix()
 }
 
 // Update current restoring force vector
-void Dynamics::updateRestoringForceVector()
-{
+void Dynamics::updateRestoringForceVector() {
   arma::vec f_rest = arma::inv(R_q)*(f_nb + f_ng);
   arma::vec t_rest = arma::cross(r_g, arma::inv(R_q)*f_ng) + arma::cross(r_b,arma::inv(R_q)*f_nb);
   
@@ -209,8 +204,7 @@ void Dynamics::updateRestoringForceVector()
 }
 
 // Update the rotation matrix with new values
-void Dynamics::updateRotMatrix()
-{
+void Dynamics::updateRotMatrix() {
   q = eta.subvec(3,6);
   // Update rotation matrix for linear velocity
   R_q << 1-2*(pow(q(2),2)+pow(q(3),2)) << 2*(q(1)*q(2)-q(3)*q(0)) << 2*(q(1)*q(3)+q(2)*q(0)) << arma::endr
@@ -226,8 +220,7 @@ void Dynamics::updateRotMatrix()
   J_q = arma::join_cols(arma::join_rows(R_q,zeros_3x3),arma::join_rows(zeros_4x3,T_q));
 }
 
-void Dynamics::normaliseQuaternions() 
-{
+void Dynamics::normaliseQuaternions() {
   q = arma::normalise(eta.subvec(3,6));
   for (int i = 0; i < q.n_elem; i++)
   {
@@ -237,8 +230,7 @@ void Dynamics::normaliseQuaternions()
 }
 
 // Return a scew-symmetric matrix representing cross-product operator
-arma::mat Dynamics::skewSymmetric(arma::vec x)
-{
+arma::mat Dynamics::skewSymmetric(arma::vec x) {
   arma::mat s = arma::mat(3,3);
   s << 0.0 << -x(2) << x(1) << arma::endr
     << x(2) << 0.0 << -x(0) << arma::endr
@@ -246,12 +238,10 @@ arma::mat Dynamics::skewSymmetric(arma::vec x)
   return s;
 }
 
-arma::vec Dynamics::getEta()
-{
+arma::vec Dynamics::getEta() {
   return eta;
 }
 
-arma::vec Dynamics::getNu()
-{
+arma::vec Dynamics::getNu() {
   return nu;
 }

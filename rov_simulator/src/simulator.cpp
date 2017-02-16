@@ -1,7 +1,7 @@
 #include "simulator.h"
 
-Simulator::Simulator(unsigned int f, ros::NodeHandle nh) : nh(nh), frequency(f)
-{
+Simulator::Simulator(unsigned int f, 
+                     ros::NodeHandle nh) : nh(nh), frequency(f) {
   frequency = f;
   u = arma::vec(6);
   dynamics = new Dynamics(f, nh);
@@ -12,13 +12,11 @@ Simulator::Simulator(unsigned int f, ros::NodeHandle nh) : nh(nh), frequency(f)
   pressurePub = nh.advertise<sensor_msgs::FluidPressure>("simulated_pressure",10);
 }
 
-void Simulator::thrustCallback(const vortex_msgs::ThrusterForces &msg)
-{
+void Simulator::thrustCallback(const vortex_msgs::ThrusterForces &msg) {
   u = arma::conv_to<arma::vec>::from(msg.thrust);
 }
 
-void Simulator::spin()
-{
+void Simulator::spin() {
   ros::Rate rate(frequency);
   while (ros::ok())
   {
@@ -38,8 +36,8 @@ void Simulator::spin()
   }
 }
 
-void Simulator::poseArmaToMsg(const arma::vec &e, geometry_msgs::Pose &m)
- {
+void Simulator::poseArmaToMsg(const arma::vec &e, 
+                              geometry_msgs::Pose &m) {
    m.position.x = e(0);
    m.position.y = e(1);
    m.position.z = e(2);
@@ -49,8 +47,8 @@ void Simulator::poseArmaToMsg(const arma::vec &e, geometry_msgs::Pose &m)
    m.orientation.w = e(6);
  }
 
- void Simulator::twistArmaToMsg(const arma::vec &e, geometry_msgs::Twist &m)
- {
+ void Simulator::twistArmaToMsg(const arma::vec &e, 
+                                geometry_msgs::Twist &m) {
    m.linear.x = e(0);
    m.linear.y = e(1);
    m.linear.z = e(2);
