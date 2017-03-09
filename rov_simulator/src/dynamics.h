@@ -38,7 +38,7 @@ private:
   void normaliseQuaternions();
   arma::mat skewSymmetric(arma::vec x);
 
-  arma::vec          p;          // Position state 3D
+  arma::vec          pos;          // Position state 3D
   arma::vec          q;          // Orientation state (quaternion)
   arma::vec          euler_init; // Initial euler angle orientation
   arma::vec          eta;        // Position and orientation vector

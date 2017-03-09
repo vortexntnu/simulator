@@ -15,7 +15,7 @@ Dynamics::Dynamics(unsigned int frequency,
   zeros_4x3 = arma::mat(4,3,arma::fill::zeros);
   R_q = arma::mat(3,3, arma::fill::zeros);
   T_q = arma::mat(4,3, arma::fill::zeros);
-  p = arma::vec(3);
+  pos = arma::vec(3);
   q = arma::vec(4);
   eta = arma::vec(7);
   eta_dot = arma::vec(7);
@@ -82,7 +82,7 @@ void Dynamics::getConfig() {
   if (!Dynamics::getVectorParam(nh, "rov/euler_initial",euler_init))
     ROS_ERROR("Failed to read initial orientation from param server.");
   // Initial position
-  if (!Dynamics::getVectorParam(nh, "rov/position_initial",p))
+  if (!Dynamics::getVectorParam(nh, "rov/position_initial",pos))
     ROS_ERROR("Failed to read initial position from param server.");
   // Weight of the ROV, m*g
   if (!nh.getParam("physical/mass_kg",m))
@@ -144,12 +144,12 @@ void Dynamics::getConfig() {
   // Initialize eta vector
   for (int i = 0; i < eta.n_elem; i++)
   {
-    if(i < p.n_elem)
+    if(i < pos.n_elem)
     {
-      eta(i) = p(i);
+      eta(i) = pos(i);
       continue;
     }
-    eta(i) = q(i-p.n_elem);
+    eta(i) = q(i-pos.n_elem);
   }
   // Create bouyancy and gravitational force vector
   f_nb = arma::zeros<arma::vec>(3);
@@ -224,7 +224,7 @@ void Dynamics::normaliseQuaternions() {
   q = arma::normalise(eta.subvec(3,6));
   for (int i = 0; i < q.n_elem; i++)
   {
-    eta(i+p.n_elem) = q(i);
+    eta(i+pos.n_elem) = q(i);
   }
 
 }
