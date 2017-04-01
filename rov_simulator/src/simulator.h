@@ -8,7 +8,7 @@
 #include "nav_msgs/Odometry.h"
 #include "geometry_msgs/Wrench.h"
 #include "geometry_msgs/Pose.h"
-#include "vortex_msgs/ThrusterForces.h"
+#include "vortex_msgs/Float64ArrayStamped.h"
 #include </usr/include/armadillo>
 
 typedef std::vector<double> stdvec;
@@ -17,7 +17,7 @@ class Simulator {
   public:
   	Simulator(unsigned int f,
               ros::NodeHandle nh);
-  	void thrustCallback(const vortex_msgs::ThrusterForces &msg);
+  	void thrustCallback(const vortex_msgs::Float64ArrayStamped &msg);
    void spin();
   private:
     void poseArmaToMsg(const arma::vec &e,

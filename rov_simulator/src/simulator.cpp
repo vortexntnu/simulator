@@ -12,8 +12,8 @@ Simulator::Simulator(unsigned int f,
   pressurePub = nh.advertise<sensor_msgs::FluidPressure>("simulated_pressure",10);
 }
 
-void Simulator::thrustCallback(const vortex_msgs::ThrusterForces &msg) {
-  u = arma::conv_to<arma::vec>::from(msg.thrust);
+void Simulator::thrustCallback(const vortex_msgs::Float64ArrayStamped &msg) {
+  u = arma::conv_to<arma::vec>::from(msg.data);
 }
 
 void Simulator::spin() {

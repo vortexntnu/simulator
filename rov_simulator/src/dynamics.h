@@ -7,7 +7,7 @@
 #include "nav_msgs/Odometry.h"
 #include "geometry_msgs/Wrench.h"
 #include "geometry_msgs/Pose.h"
-#include "vortex_msgs/ThrusterForces.h"
+#include "vortex_msgs/Float64ArrayStamped.h"
 #define g 9.81
 // density of water [kg/m³] at 20 deg C
 #define rho 998.2071
