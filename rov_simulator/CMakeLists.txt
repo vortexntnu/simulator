@@ -15,10 +15,6 @@ find_package(Armadillo REQUIRED)
 set(ROSLINT_CPP_OPTS "--filter=-legal/copyright")
 roslint_cpp()
 
-###################################
-## catkin specific configuration ##
-###################################
-
 catkin_package(
   INCLUDE_DIRS
   include
@@ -32,10 +28,6 @@ catkin_package(
   Armadillo
 )
 
-###########
-## Build ##
-###########
-
 include_directories(
   include
   ${catkin_INCLUDE_DIRS}
@@ -45,16 +37,22 @@ include_directories(
 link_directories(/usr/include /usr/share/Armadillo)
 
 
-add_executable(simulator_dynamics src/simulator_node.cpp
-                          src/simulator.cpp
-                          src/dynamics.cpp
+add_executable(${PROJECT_NAME}_node
+  src/simulator_node.cpp
+  src/simulator.cpp
+  src/dynamics.cpp
 )
 
-add_dependencies(simulator_dynamics vortex_msgs_generate_messages_cpp)
+add_dependencies(${PROJECT_NAME}_node
+  vortex_msgs_generate_messages_cpp
+)
 
-target_link_libraries(simulator_dynamics ${catkin_LIBRARIES} ${ARMADILLO_LIBRARIES})
+target_link_libraries(${PROJECT_NAME}_node
+  ${catkin_LIBRARIES}
+  ${ARMADILLO_LIBRARIES}
+)
 
 if(CATKIN_ENABLE_TESTING)
-  # find_package(rostest REQUIRED)
+  find_package(rostest REQUIRED)
   roslint_add_test()
 endif()
