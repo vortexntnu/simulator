@@ -1,5 +1,8 @@
 #include "rov_simulator/simulator.h"
 
+#include "sensor_msgs/Imu.h"
+#include "sensor_msgs/FluidPressure.h"
+
 Simulator::Simulator(unsigned int f,
                      ros::NodeHandle nh) : nh(nh), frequency(f)
 {
