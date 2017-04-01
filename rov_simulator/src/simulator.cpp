@@ -3,10 +3,8 @@
 #include "sensor_msgs/Imu.h"
 #include "sensor_msgs/FluidPressure.h"
 
-Simulator::Simulator(unsigned int f,
-                     ros::NodeHandle nh) : nh(nh), frequency(f)
+Simulator::Simulator(unsigned int f, ros::NodeHandle nh) : nh(nh), frequency(f)
 {
-  frequency = f;
   u = arma::vec(6);
   dynamics = new Dynamics(f, nh);
   wrenchSub = nh.subscribe("thruster_forces", 10, &Simulator::thrustCallback, this);

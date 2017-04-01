@@ -10,20 +10,15 @@
 #include </usr/include/armadillo>
 #include <vector>
 
-typedef std::vector<double> stdvec;
-
 class Simulator
 {
   public:
-    Simulator(unsigned int f,
-              ros::NodeHandle nh);
+    Simulator(unsigned int f, ros::NodeHandle nh);
     void thrustCallback(const vortex_msgs::Float64ArrayStamped &msg);
     void spin();
   private:
-    void poseArmaToMsg(const arma::vec &e,
-                       geometry_msgs::Pose &m);
-    void twistArmaToMsg(const arma::vec &e,
-                        geometry_msgs::Twist &m);
+    void poseArmaToMsg(const arma::vec &e, geometry_msgs::Pose &m);
+    void twistArmaToMsg(const arma::vec &e, geometry_msgs::Twist &m);
     unsigned int    frequency;
     ros::NodeHandle nh;
     ros::Subscriber wrenchSub;
