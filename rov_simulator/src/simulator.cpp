@@ -28,11 +28,11 @@ void Simulator::spin()
     dynamics->calculate(u);
     geometry_msgs::Pose posemsg;
     arma::vec pose = dynamics->getEta();
-    Simulator::poseArmaToMsg(pose, posemsg);
+    Simulator::poseArmaToMsg(pose, &posemsg);
 
     geometry_msgs::Twist twistmsg;
     arma::vec twist = dynamics->getNu();
-    Simulator::twistArmaToMsg(twist, twistmsg);
+    Simulator::twistArmaToMsg(twist, &twistmsg);
 
     posePub.publish(posemsg);
     twistPub.publish(twistmsg);
@@ -40,25 +40,23 @@ void Simulator::spin()
   }
 }
 
-void Simulator::poseArmaToMsg(const arma::vec &e,
-                              geometry_msgs::Pose &m)
+void Simulator::poseArmaToMsg(const arma::vec &e, geometry_msgs::Pose *m)
 {
-  m.position.x = e(0);
-  m.position.y = e(1);
-  m.position.z = e(2);
-  m.orientation.x = e(3);
-  m.orientation.y = e(4);
-  m.orientation.z = e(5);
-  m.orientation.w = e(6);
+  m->position.x = e(0);
+  m->position.y = e(1);
+  m->position.z = e(2);
+  m->orientation.x = e(3);
+  m->orientation.y = e(4);
+  m->orientation.z = e(5);
+  m->orientation.w = e(6);
 }
 
-void Simulator::twistArmaToMsg(const arma::vec &e,
-                               geometry_msgs::Twist &m)
+void Simulator::twistArmaToMsg(const arma::vec &e, geometry_msgs::Twist *m)
 {
-  m.linear.x = e(0);
-  m.linear.y = e(1);
-  m.linear.z = e(2);
-  m.angular.x = e(3);
-  m.angular.y = e(4);
-  m.angular.z = e(5);
+  m->linear.x = e(0);
+  m->linear.y = e(1);
+  m->linear.z = e(2);
+  m->angular.x = e(3);
+  m->angular.y = e(4);
+  m->angular.z = e(5);
 }

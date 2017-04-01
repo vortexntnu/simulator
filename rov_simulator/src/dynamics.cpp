@@ -60,31 +60,31 @@ void Dynamics::calculate(arma::vec u)
 void Dynamics::getConfig()
 {
   // Inertia matrix
-  if (!Dynamics::getMatrixParam(nh, "/physical/inertia", M))
+  if (!Dynamics::getMatrixParam(nh, "/physical/inertia", &M))
     ROS_ERROR("Failed to read parameter physical/inertia.");
   // Added mass matrix
-  if (!Dynamics::getMatrixParam(nh, "/physical/added_mass", M_a))
+  if (!Dynamics::getMatrixParam(nh, "/physical/added_mass", &M_a))
     ROS_ERROR("Failed to read parameter physical/added_mass.");
   // Linear damping matrix
-  if (!Dynamics::getMatrixParam(nh, "/physical/linear_damping", D_l))
+  if (!Dynamics::getMatrixParam(nh, "/physical/linear_damping", &D_l))
     ROS_ERROR("Failed to read parameter physical/linear_damping.");
   // Thruster config matrix
-  if (!Dynamics::getMatrixParam(nh, "propulsion/thrusters/configuration_matrix", T))
+  if (!Dynamics::getMatrixParam(nh, "propulsion/thrusters/configuration_matrix", &T))
     ROS_ERROR("Failed to read thrust config matrix from param server.");
   // Center of boyancy from CO
-  if (!Dynamics::getVectorParam(nh, "physical/center_of_buoyancy", r_b))
+  if (!Dynamics::getVectorParam(nh, "physical/center_of_buoyancy", &r_b))
     ROS_ERROR("Failed to read center of boyancy from param server.");
   // Center of gravity from CO
-  if (!Dynamics::getVectorParam(nh, "physical/center_of_mass", r_g))
+  if (!Dynamics::getVectorParam(nh, "physical/center_of_mass", &r_g))
     ROS_ERROR("Failed to read centerofgravity from param server.");
   // Vector of quadratic damping parameters
-  if (!Dynamics::getVectorParam(nh, "physical/quad_damping_vector", dq))
+  if (!Dynamics::getVectorParam(nh, "physical/quad_damping_vector", &dq))
     ROS_ERROR("Failed to read quadratic damping params from param server.");
   // Initial orientation
-  if (!Dynamics::getVectorParam(nh, "rov/euler_initial", euler_init))
+  if (!Dynamics::getVectorParam(nh, "rov/euler_initial", &euler_init))
     ROS_ERROR("Failed to read initial orientation from param server.");
   // Initial position
-  if (!Dynamics::getVectorParam(nh, "rov/position_initial", p))
+  if (!Dynamics::getVectorParam(nh, "rov/position_initial", &p))
     ROS_ERROR("Failed to read initial position from param server.");
   // Weight of the ROV, m*g
   if (!nh.getParam("physical/mass_kg", m))

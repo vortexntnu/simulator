@@ -74,7 +74,7 @@ private:
   double timeStep;       // Timestep in the forward euler method
 
 
-  inline bool getMatrixParam(ros::NodeHandle nh, std::string name, arma::mat &X)
+  inline bool getMatrixParam(ros::NodeHandle nh, std::string name, arma::mat *X)
   {
     XmlRpc::XmlRpcValue matrix;
     nh.getParam(name, matrix);
@@ -83,10 +83,10 @@ private:
     {
       const int rows = matrix.size();
       const int cols = matrix[0].size();
-      X.zeros(rows, cols);
+      X->zeros(rows, cols);
       for (int i = 0; i < rows; ++i)
         for (int j = 0; j < cols; ++j)
-          X(i, j) = matrix[i][j];
+          (*X)(i, j) = matrix[i][j];
       }
       catch(...)
       {
@@ -95,11 +95,11 @@ private:
       return true;
     };
 
-    inline bool getVectorParam(ros::NodeHandle nh, std::string name, arma::vec &v)
+    inline bool getVectorParam(ros::NodeHandle nh, std::string name, arma::vec *v)
     {
-      stdvec p(v.n_elem, 0.0);
+      stdvec p(v->n_elem, 0.0);
       bool success = nh.getParam(name, p);
-      v = arma::conv_to<arma::vec>::from(p);
+      (*v) = arma::conv_to<arma::vec>::from(p);
       return success;
     };
 
