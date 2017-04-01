@@ -37,7 +37,7 @@ void Dynamics::calculate(arma::vec u) {
   Dynamics::updateCoriolisMatrices();
   Dynamics::updateDampingMatrix();
   Dynamics::updateRestoringForceVector();
-  
+
   tau = T*u;
   // Quickfix since T*u -> dim(5)
   for (int i = 0; i++; i < tau.n_elem)
@@ -111,7 +111,7 @@ void Dynamics::getConfig() {
     if(R_euler(i,i) > max) {
       max = R_euler(i,i);
       index = i;
-    } 
+    }
   }
   arma::vec p = arma::vec(4);
   p(index) = abs(sqrt(1+2*max-R44));
@@ -120,12 +120,12 @@ void Dynamics::getConfig() {
     case(0):
       p(1) = (R_euler(1,0) - R_euler(0,1))/p(0);
       p(2) = (R_euler(0,2) - R_euler(2,0))/p(0);
-      p(3) = (R_euler(2,1) - R_euler(1,2))/p(0);     
+      p(3) = (R_euler(2,1) - R_euler(1,2))/p(0);
       break;
     case(1):
       p(0) = (R_euler(1,0) - R_euler(0,1))/p(1);
       p(2) = (R_euler(2,1) - R_euler(1,2))/p(1);
-      p(3) = (R_euler(0,2) - R_euler(2,0))/p(1);            
+      p(3) = (R_euler(0,2) - R_euler(2,0))/p(1);
       break;
     case(2):
       p(0) = (R_euler(0,2) - R_euler(2,0))/p(2);
@@ -159,7 +159,7 @@ void Dynamics::getConfig() {
 }
 
 void Dynamics::updateCoriolisMatrices() {
-  //First update added mass coriolis matrix 
+  //First update added mass coriolis matrix
   arma::mat C_a = arma::mat(6,6);
   arma::vec var1 = M_a.submat(0,0,2,2)*nu.subvec(0,2) + M_a.submat(0,3,2,5)*nu.subvec(3,5);
   arma::vec var2 = M_a.submat(3,0,5,2)*nu.subvec(0,2) + M_a.submat(3,3,5,5)*nu.subvec(3,5);
@@ -190,7 +190,7 @@ void Dynamics::updateDampingMatrix() {
 void Dynamics::updateRestoringForceVector() {
   arma::vec f_rest = arma::inv(R_q)*(f_nb + f_ng);
   arma::vec t_rest = arma::cross(r_g, arma::inv(R_q)*f_ng) + arma::cross(r_b,arma::inv(R_q)*f_nb);
-  
+
   for (int i = 0; i < g_vec.n_elem; i ++)
   {
     if (i < f_rest.n_elem)
@@ -200,7 +200,7 @@ void Dynamics::updateRestoringForceVector() {
     }
     g_vec(i) = t_rest(i-f_rest.n_elem);
   }
-  
+
 }
 
 // Update the rotation matrix with new values

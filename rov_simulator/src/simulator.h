@@ -15,14 +15,14 @@ typedef std::vector<double> stdvec;
 
 class Simulator {
   public:
-  	Simulator(unsigned int f, 
+  	Simulator(unsigned int f,
               ros::NodeHandle nh);
   	void thrustCallback(const vortex_msgs::ThrusterForces &msg);
-    void spin();
+   void spin();
   private:
-    void poseArmaToMsg(const arma::vec &e, 
+    void poseArmaToMsg(const arma::vec &e,
                        geometry_msgs::Pose &m);
-    void twistArmaToMsg(const arma::vec &e, 
+    void twistArmaToMsg(const arma::vec &e,
                         geometry_msgs::Twist &m);
   	unsigned int    frequency;
   	ros::NodeHandle nh;

@@ -16,7 +16,7 @@ typedef std::vector<double> stdvec;
 
 class Dynamics {
 public:
-  Dynamics(unsigned int frequency, 
+  Dynamics(unsigned int frequency,
            ros::NodeHandle nh);
 
   void calculate(arma::vec u);
@@ -42,7 +42,7 @@ private:
   arma::vec          q;          // Orientation state (quaternion)
   arma::vec          euler_init; // Initial euler angle orientation
   arma::vec          eta;        // Position and orientation vector
-  arma::vec          eta_dot; 
+  arma::vec          eta_dot;
   arma::vec          nu;         // Velocity state (linear and angular)
   arma::vec          nu_ned;     // Velocity state (NED frame)
   arma::vec          nu_dot;     // accelleration vector (linear and angular)
@@ -50,12 +50,12 @@ private:
   arma::vec          tau6;       // Control ROV forces 6dof
   arma::vec          dq;         // Quadratic damping parameters
   arma::vec          f_nb;       // Bouyancy force
-  arma::vec          f_ng;       // Gravitational force 
+  arma::vec          f_ng;       // Gravitational force
   arma::vec          g_vec;      // Restoring force vector
   arma::vec          r_g;        // Center of gravity, expressed in body frame
   arma::vec          r_b;        // Center of buoyancy, expressed in body frame
 
-  arma::mat          T;          // Thrust config 
+  arma::mat          T;          // Thrust config
   arma::mat          T_pinv;     // Pseudoinverse of T
   arma::mat          R;          // Rotation matrix from {b} to {n}
   arma::mat          M_a;        // Added mass matrix
@@ -76,9 +76,9 @@ private:
   double B;                      // [N] Buoyancy of ROV
   double timeStep;               // Timestep in the forward euler method
 
-  
-  inline bool getMatrixParam(ros::NodeHandle nh, 
-                             std::string name, 
+
+  inline bool getMatrixParam(ros::NodeHandle nh,
+                             std::string name,
                              arma::mat &X) {
     XmlRpc::XmlRpcValue matrix;
     nh.getParam(name, matrix);
@@ -99,8 +99,8 @@ private:
    return true;
   };
 
-  inline bool getVectorParam(ros::NodeHandle nh, 
-                             std::string name, 
+  inline bool getVectorParam(ros::NodeHandle nh,
+                             std::string name,
                              arma::vec &v) {
     stdvec p (v.n_elem,0.0);
     bool success = nh.getParam(name, p);
@@ -111,11 +111,11 @@ private:
   inline double s(double val) {
     return std::sin(val);
   };
-  
+
   inline double c(double val) {
     return std::cos(val);
   };
 
  };
- 
+
 #endif

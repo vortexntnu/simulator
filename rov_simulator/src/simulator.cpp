@@ -1,6 +1,6 @@
 #include "simulator.h"
 
-Simulator::Simulator(unsigned int f, 
+Simulator::Simulator(unsigned int f,
                      ros::NodeHandle nh) : nh(nh), frequency(f) {
   frequency = f;
   u = arma::vec(6);
@@ -36,7 +36,7 @@ void Simulator::spin() {
   }
 }
 
-void Simulator::poseArmaToMsg(const arma::vec &e, 
+void Simulator::poseArmaToMsg(const arma::vec &e,
                               geometry_msgs::Pose &m) {
    m.position.x = e(0);
    m.position.y = e(1);
@@ -47,7 +47,7 @@ void Simulator::poseArmaToMsg(const arma::vec &e,
    m.orientation.w = e(6);
  }
 
- void Simulator::twistArmaToMsg(const arma::vec &e, 
+ void Simulator::twistArmaToMsg(const arma::vec &e,
                                 geometry_msgs::Twist &m) {
    m.linear.x = e(0);
    m.linear.y = e(1);
