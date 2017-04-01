@@ -1,4 +1,4 @@
-#include "simulator.h"
+#include "rov_simulator/simulator.h"
 
 Simulator::Simulator(unsigned int f,
                      ros::NodeHandle nh) : nh(nh), frequency(f) {

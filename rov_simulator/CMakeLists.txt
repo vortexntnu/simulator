@@ -20,6 +20,8 @@ roslint_cpp()
 ###################################
 
 catkin_package(
+  INCLUDE_DIRS
+  include
   CATKIN_DEPENDS
   roscpp
   vortex_msgs
@@ -35,6 +37,7 @@ catkin_package(
 ###########
 
 include_directories(
+  include
   ${catkin_INCLUDE_DIRS}
   ${Armadillo_INCLUDE_DIRS}
 )

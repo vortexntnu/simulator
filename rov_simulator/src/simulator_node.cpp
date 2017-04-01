@@ -1,4 +1,4 @@
-#include "simulator.h"
+#include "rov_simulator/simulator.h"
 
 int main(int argc, char **argv) {
   ros::init(argc, argv, "simulator");

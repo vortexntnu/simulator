@@ -1,5 +1,5 @@
-#include "dynamics.h"
-#include "simulator.h"
+#include "rov_simulator/dynamics.h"
+#include "rov_simulator/simulator.h"
 
 Dynamics::Dynamics(unsigned int frequency,
                    ros::NodeHandle nh) : nh(nh) {
