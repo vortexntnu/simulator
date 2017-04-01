@@ -1,8 +1,8 @@
-#ifndef SIMULATOR_H
-#define SIMULATOR_H
+#ifndef ROV_SIMULATOR_SIMULATOR_H
+#define ROV_SIMULATOR_SIMULATOR_H
 #include "ros/ros.h"
 
-#include "dynamics.h"
+#include "rov_simulator/dynamics.h"
 #include "sensor_msgs/Imu.h"
 #include "sensor_msgs/FluidPressure.h"
 #include "nav_msgs/Odometry.h"
@@ -10,15 +10,17 @@
 #include "geometry_msgs/Pose.h"
 #include "vortex_msgs/Float64ArrayStamped.h"
 #include </usr/include/armadillo>
+#include <vector>
 
 typedef std::vector<double> stdvec;
 
-class Simulator {
+class Simulator
+{
   public:
     Simulator(unsigned int f,
               ros::NodeHandle nh);
     void thrustCallback(const vortex_msgs::Float64ArrayStamped &msg);
-   void spin();
+    void spin();
   private:
     void poseArmaToMsg(const arma::vec &e,
                        geometry_msgs::Pose &m);
@@ -35,4 +37,4 @@ class Simulator {
     arma::vec       u;
 };
 
-#endif
+#endif  // ROV_SIMULATOR_SIMULATOR_H
