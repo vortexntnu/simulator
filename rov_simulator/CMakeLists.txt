@@ -43,6 +43,6 @@ add_executable(simulator_dynamics src/simulator_node.cpp
                           src/dynamics.cpp
 )
 
-add_dependencies(simulator_dynamics ${PROJECT_NAME}_generate_messages_cpp)
+add_dependencies(simulator_dynamics vortex_msgs_generate_messages_cpp)
 
 target_link_libraries(simulator_dynamics ${catkin_LIBRARIES} ${ARMADILLO_LIBRARIES})
