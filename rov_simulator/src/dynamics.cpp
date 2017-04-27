@@ -149,10 +149,10 @@ void Dynamics::getConfig()
   {
     if (i < p.n_elem)
     {
-      eta(i) = pos(i);
+      eta(i) = p(i);
       continue;
     }
-    eta(i) = q(i-pos.n_elem);
+    eta(i) = q(i-p.n_elem);
   }
   // Create bouyancy and gravitational force vector
   f_nb = arma::zeros<arma::vec>(3);
