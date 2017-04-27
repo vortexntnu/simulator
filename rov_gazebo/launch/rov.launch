@@ -3,4 +3,6 @@
   <include file="$(find gazebo_ros)/launch/empty_world.launch">
     <arg name="world_name" value="$(find rov_gazebo)/worlds/rov.world"/>
   </include>
+  <!-- Spawn a robot into Gazebo (example robot, change this to the actual model)-->
+  <node name="spawn_urdf" pkg="gazebo_ros" type="spawn_model" args="-file $(find baxter_description)/urdf/baxter.urdf -urdf -z 1 -model baxter" />
 </launch>
