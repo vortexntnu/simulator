@@ -1,6 +1,3 @@
-#ifndef _ROV_PLUGIN_HH_
-#define _ROV_PLUGIN_HH_
-
 #include <thread>
 #include <boost/bind.hpp>
 #include "ros/ros.h"
@@ -21,9 +18,18 @@
 namespace gazebo {
 
   class RovPlugin : public ModelPlugin {
-    public: RovPlugin(){}
+    public: RovPlugin() : ModelPlugin()
+    {
+      // Make sure the ROS node for Gazebo has already been initialized
+      if (!ros::isInitialized())
+      {
+        ROS_FATAL_STREAM("A ROS node for Gazebo has not been initialized, unable to load plugin. "
+          << "Load the Gazebo system plugin 'libgazebo_ros_api_plugin.so' in the gazebo_ros package)");
+        return;
+      }
+    }
 
-    public: virtual void load(physics::ModelPtr _model, sdf::ElementPtr _sdf) {
+    public: void load(physics::ModelPtr _model, sdf::ElementPtr _sdf) {
   	  //TODO: set up model here
       // Store the model pointer for convenience.
       this->model = _model;
@@ -59,7 +65,7 @@ namespace gazebo {
     /// of the Velodyne.
     public: void OnRosMsg(const geometry_msgs::Pose &_msg) {
       pos = math::Vector3(_msg.position.x,_msg.position.y, 
-        msg.position.z);
+        _msg.position.z);
       rot = math::Quaternion(_msg.orientation.x,
       	_msg.orientation.y, _msg.orientation.z, _msg.orientation.w);
       pose = math::Pose(pos,rot);
@@ -104,4 +110,3 @@ namespace gazebo {
   // Tell Gazebo about this plugin, so that Gazebo can call Load on this plugin.
   GZ_REGISTER_MODEL_PLUGIN(RovPlugin)
 }
-#endif
