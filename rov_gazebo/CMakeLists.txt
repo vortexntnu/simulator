@@ -22,7 +22,7 @@ catkin_package(
   LIBRARIES ${PROJECT_NAME}
 )
 
-add_library(${PROJECT_NAME} plugins/gazebo_plugin.cpp)
+add_library(${PROJECT_NAME} plugins/rov_plugin.cpp)
 target_link_libraries(${PROJECT_NAME} ${catkin_LIBRARIES} ${GAZEBO_LIBRARIES})
 
 install(DIRECTORY launch
