@@ -1,0 +1,10 @@
+<launch>
+  <!-- Environment variables -->
+  <env name="GAZEBO_MODEL_PATH" value="/home/ole/catkin_ws/src/"/>
+
+  <!-- Open empty world and add simple_ROV.world -->
+  <include file="$(find gazebo_ros)/launch/empty_world.launch">
+    <arg name="world_name" value="$(find simple_ROV_gazebo)/worlds/simple_ROV.world"/>
+    <!-- more default parameters can be changed here -->
+  </include>
+</launch>

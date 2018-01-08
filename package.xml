@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<package>
+  <name>simple_ROV_gazebo</name>
+  <version>0.0.0</version>
+  <description>The simple_ROV_gazebo package</description>
+
+  <maintainer email="ole@stivert.otterholm">ole</maintainer>
+
+  <license>BSD</license>
+
+  <buildtool_depend>catkin</buildtool_depend>
+  <export>
+
+  </export>
+</package>
