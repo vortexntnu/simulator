@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <package>
-  <name>simple_ROV_gazebo</name>
+  <name>Simulator</name>
   <version>0.0.0</version>
   <description>The simple_ROV_gazebo package</description>
 
