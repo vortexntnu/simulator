@@ -1,0 +1,36 @@
+<sdf version="1.6">
+  <model name="rov">
+    <!--static>true</static-->
+    <link name="link">
+      <inertial>
+        <inertia>
+          <ixx>1.0</ixx>
+          <ixy>0.0</ixy>
+          <ixz>0.0</ixz>
+          <iyy>1.0</iyy>
+          <iyz>0.0</iyz>
+          <izz>1.0</izz>
+        </inertia>
+        <mass>20.0</mass>
+      </inertial>
+      <collision name="collision">
+        <geometry>
+          <mesh>
+            <scale>1 1 1</scale>
+            <uri>model://rov/meshes/ROV-skall.dae</uri>
+          </mesh>
+        </geometry>
+      </collision>
+      <visual name="visual">
+        <geometry>
+          <mesh>
+            <scale>1 1 1</scale>
+            <uri>model://rov/meshes/ROV-skall.dae</uri>
+          </mesh>
+        </geometry>
+      </visual>
+    </link>
+    <plugin name="simple_ROV_control" filename="libsimple_ROV_plugin.so"/>
+  </model>
+</sdf>
+
