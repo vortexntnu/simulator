@@ -11,7 +11,7 @@
           <iyz>0.0</iyz>
           <izz>1.0</izz>
         </inertia>
-        <mass>20.0</mass>
+        <mass>19.95</mass>
       </inertial>
       <collision name="collision">
         <geometry>
@@ -31,6 +31,12 @@
       </visual>
     </link>
     <plugin name="simple_ROV_control" filename="libsimple_ROV_plugin.so"/>
+    <plugin name="BuoyancyPlugin" filename="libBuoyancyPlugin.so">
+      <link name="link">
+        <center_of_volume>0 0 0.05</center_of_volume>
+        <volume>0.02</volume>
+      </link>
+    </plugin>
   </model>
 </sdf>
 

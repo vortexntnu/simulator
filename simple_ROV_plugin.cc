@@ -3,6 +3,7 @@
 #include <gazebo/physics/physics.hh>
 #include <gazebo/common/common.hh>
 #include <stdio.h>
+#include <stdlib.h>
 
 #include <thread>
 #include "ros/ros.h"
@@ -54,14 +55,15 @@ namespace gazebo
       math::Vector3 force(_msg.force.x, _msg.force.y, _msg.force.z);
       math::Vector3 torque(_msg.torque.x, _msg.torque.y, _msg.torque.z);
       // Force
-      this->link->AddRelativeForce(force*100);
-      this->link->AddRelativeTorque(torque*100);
+      this->link->AddRelativeForce(100*force);
+      this->link->AddRelativeTorque(200*torque);
       // Damping
       math::Vector3 linVelDamp = this->link->GetRelativeLinearVel();
       math::Vector3 angVelDamp = this->link->GetRelativeAngularVel();
+      linVelDamp.z = linVelDamp.z*2;
 
-      this->link->AddRelativeForce(-1000*linVelDamp);
-      this->link->AddRelativeTorque(-100*angVelDamp);
+      this->link->AddRelativeForce(-1600*linVelDamp*linVelDamp.GetAbs());
+      this->link->AddRelativeTorque(-200*angVelDamp*angVelDamp.GetAbs());
 
       ROS_INFO("Force [%f,%f,%f], Torque [%f,%f,%f]",force.x, force.y, force.z,
 torque.x, torque.y, torque.z);

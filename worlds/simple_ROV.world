@@ -2,7 +2,7 @@
 <sdf version="1.4">
   <world name="default">
     <gravity>
-      0 0 0
+      0 0 -9.81
     </gravity>
     <include>
       <uri>model://sun</uri>
@@ -14,6 +14,7 @@
 
     <include>
       <uri>model://rov</uri>
+      <pose> 1 1 2  0 0 0 </pose>
     </include>
 
   </world>
