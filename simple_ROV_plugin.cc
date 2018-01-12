@@ -7,8 +7,6 @@
 
 #include <thread>
 #include "ros/ros.h"
-//#include "ros/callback_queue.h"
-//#include "ros/subscribe_options.h"
 #include "geometry_msgs/Wrench.h"
 
 namespace gazebo
@@ -38,12 +36,24 @@ namespace gazebo
       // Create a named topic, and subscribe to is.
       this->rosSub = this->rosNode->subscribe("/rov_forces", 10, &ModelPush::OnRosMsg, this);
 
+      this->linFrictionCoef  = math::Vector3(80,80,203);
+      this->angFrictionCoef = math::Vector3(1,1,1);
     }
 
     // Called by the world update start event
     public: void OnUpdate(const common::UpdateInfo & /*_info*/)
     {
       // This is runned each simulation iteration.
+      this->link->AddRelativeForce(this->force);
+      this->link->AddRelativeTorque(this->torque);
+
+      math::Vector3 linVel = this->link->GetRelativeLinearVel();
+      math::Vector3 angVel = this->link->GetRelativeAngularVel();
+      math::Vector3 linFriction = this->linFrictionCoef*linVel*linVel.GetAbs();
+      math::Vector3 angFriction = this->angFrictionCoef*angVel*angVel.GetAbs();
+
+      this->link->AddRelativeForce(-linFriction);
+      this->link->AddRelativeTorque(-angFriction);
     }
 
     // \brief Handle an incoming message from ROS
@@ -52,21 +62,19 @@ namespace gazebo
     public: void OnRosMsg(const geometry_msgs::Wrench &_msg)
     {
       // Load msg to proper types
-      math::Vector3 force(_msg.force.x, _msg.force.y, _msg.force.z);
-      math::Vector3 torque(_msg.torque.x, _msg.torque.y, _msg.torque.z);
-      // Force
-      this->link->AddRelativeForce(100*force);
-      this->link->AddRelativeTorque(200*torque);
-      // Damping
-      math::Vector3 linVelDamp = this->link->GetRelativeLinearVel();
-      math::Vector3 angVelDamp = this->link->GetRelativeAngularVel();
-      linVelDamp.z = linVelDamp.z*2;
+      math::Vector3 force_msg(_msg.force.x, _msg.force.y, _msg.force.z);
+      math::Vector3 torque_msg(_msg.torque.x, _msg.torque.y, _msg.torque.z);
 
-      this->link->AddRelativeForce(-1600*linVelDamp*linVelDamp.GetAbs());
-      this->link->AddRelativeTorque(-200*angVelDamp*angVelDamp.GetAbs());
+      this->force = force_msg;
+      this->torque = torque_msg;
 
       ROS_INFO("Force [%f,%f,%f], Torque [%f,%f,%f]",force.x, force.y, force.z,
 torque.x, torque.y, torque.z);
+      math::Vector3 force_debug = this->link->GetRelativeForce();
+      math::Vector3 torque_debug = this->link->GetRelativeTorque();
+
+      ROS_INFO("DBG_F [%f, %f, %f], DBG_T [%f,%f,%f]", force_debug.x,
+force_debug.y, force_debug.z, torque_debug.x, torque_debug.y, torque_debug.z);
     }
 
     // Pointer to the model
@@ -83,6 +91,14 @@ torque.x, torque.y, torque.z);
 
     /// \brief A ROS subscriber
     private: ros::Subscriber rosSub;
+
+    // Force & Torque from rov_force topic
+    private: math::Vector3 force;
+    private: math::Vector3 torque;
+
+    // Gains & Coefficients
+    private: math::Vector3 linFrictionCoef;
+    private: math::Vector3 angFrictionCoef;
   };
 
   // Register this plugin with the simulator
