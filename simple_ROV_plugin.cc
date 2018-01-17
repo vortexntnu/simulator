@@ -38,14 +38,18 @@ namespace gazebo
 
       this->linFrictionCoef  = math::Vector3(80,80,203);
       this->angFrictionCoef = math::Vector3(1,1,1);
+
+      this->forceSign = math::Vector3(1,-1,1);
+      this->torqueSign = math::Vector3(1,-1,-1);
     }
 
     // Called by the world update start event
     public: void OnUpdate(const common::UpdateInfo & /*_info*/)
     {
       // This is runned each simulation iteration.
-      this->link->AddRelativeForce(this->force);
-      this->link->AddRelativeTorque(this->torque);
+
+      this->link->AddRelativeForce(this->force*this->forceSign);
+      this->link->AddRelativeTorque(this->torque*this->torqueSign);
 
       math::Vector3 linVel = this->link->GetRelativeLinearVel();
       math::Vector3 angVel = this->link->GetRelativeAngularVel();
@@ -99,6 +103,9 @@ force_debug.y, force_debug.z, torque_debug.x, torque_debug.y, torque_debug.z);
     // Gains & Coefficients
     private: math::Vector3 linFrictionCoef;
     private: math::Vector3 angFrictionCoef;
+
+    private: math::Vector3 forceSign;
+    private: math::Vector3 torqueSign;
   };
 
   // Register this plugin with the simulator
