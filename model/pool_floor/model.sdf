@@ -7,7 +7,7 @@
         <geometry>
           <plane>
             <normal>0 0 1</normal>
-            <size>100 100</size>
+            <size>50 50</size>
           </plane>
         </geometry>
         <surface>
@@ -20,18 +20,17 @@
         </surface>
       </collision>
       <visual name="visual">
-        <cast_shadows>false</cast_shadows>
         <geometry>
           <plane>
             <normal>0 0 1</normal>
-            <size>100 100</size>
+            <size>50 50</size>
           </plane>
         </geometry>
         <material>
           <script>
-            <uri>model://pool_floor/materials/scripts</uri>
-            <uri>model://pool_floor/materials/textures</uri>
-            <name>MyGroundPlane/Image</name>
+            <uri>model://pool_floor/materials/scripts/</uri>
+            <uri>model://pool_floor/materials/textures/</uri>
+            <name>PoolFloor/Image</name>
           </script>
         </material>
       </visual>
