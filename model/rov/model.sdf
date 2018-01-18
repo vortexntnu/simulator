@@ -31,9 +31,9 @@
       </visual>
       <sensor name="camera" type="camera">
         <!--frame name="camera_frame">
-          <pose frame="camera_frame"> 10 0 0  0 0 0 </pose>
+          <pose frame="camera_frame"> 0.2 0 0  0 0 0 </pose>
         </frame-->
-        <pose> 2 0 0  0 0 0 </pose>
+        <pose> 0.2 0 0  0 0 0 </pose>
         <update_rate>25</update_rate>
         <plugin name="camera_plugin" filename="libgazebo_ros_camera.so">
           <imageTopicName>image_raw</imageTopicName>
@@ -45,7 +45,7 @@
     <plugin name="simple_ROV_control" filename="libsimple_ROV_plugin.so"/>
     <plugin name="BuoyancyPlugin" filename="libBuoyancyPlugin.so">
       <link name="link">
-        <center_of_volume>0 0 0.02</center_of_volume>
+        <center_of_volume>0 0 0.01</center_of_volume>
         <volume>0.0202</volume>
       </link>      
     </plugin>
