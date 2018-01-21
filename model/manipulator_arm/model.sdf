@@ -1,0 +1,111 @@
+<?xml version="1.0"?>
+<sdf version="1.6">
+  <model name="manipulator_arm">
+    <static>false</static>
+    <link name="base_arm">
+      <pose>0 0 0 0 0 0</pose>
+      <collision name='collision'>
+        <geometry>
+          <box>
+            <size>.2 .05 .015</size>
+          </box>
+        </geometry>
+      </collision>
+      <visual name='visual'>
+        <geometry>
+          <box>
+            <size>.2 .05 .015</size>
+          </box>
+        </geometry>
+      </visual>
+    </link>
+    
+    <link name="left_claw">
+      <pose>0.01 0 -0.005  1.5707 0 1.5707</pose>
+      <inertial>
+        <inertia>
+          <ixx>0.01</ixx>
+          <ixy>0</ixy>
+          <ixz>0</ixz>
+          <iyy>0.01</iyy>
+          <iyz>0</iyz>
+          <izz>0.01</izz>
+        </inertia>
+        <mass>1</mass>
+      </inertial>
+      <collision name="left_collision">
+        <geometry>
+          <mesh>
+            <scale>.1 .1 .1</scale>
+            <uri>model://manipulator_arm/meshes/manipulator_claw.dae</uri>
+          </mesh>
+        </geometry>
+      </collision>
+      <visual name="left_visual">
+        <geometry>
+          <mesh>
+            <scale>.1 .1 .1</scale>
+            <uri>model://manipulator_arm/meshes/manipulator_claw.dae</uri>
+          </mesh>
+        </geometry>
+      </visual>
+    </link>
+
+    <link name="right_claw">
+      <pose>-0.01 0 0.005  -1.5707 0 1.5707</pose>
+      <inertial>
+        <inertia>
+          <ixx>0.01</ixx>
+          <ixy>0</ixy>
+          <ixz>0</ixz>
+          <iyy>0.01</iyy>
+          <iyz>0</iyz>
+          <izz>0.01</izz>
+        </inertia>
+        <mass>1</mass>
+      </inertial>
+      <collision name="right_collision">
+        <geometry>
+          <mesh>
+            <scale>.1 .1 .1</scale>
+            <uri>model://manipulator_arm/meshes/manipulator_claw.dae</uri>
+          </mesh>
+        </geometry>
+      </collision>
+      <visual name="right_visual">
+        <geometry>
+          <mesh>
+            <scale>.1 .1 .1</scale>
+            <uri>model://manipulator_arm/meshes/manipulator_claw.dae</uri>
+          </mesh>
+        </geometry>
+      </visual>
+    </link>
+
+    <joint name="left" type="prismatic">
+      <child>left_claw</child>
+      <parent>base_arm</parent>
+      <axis>
+        <limit>
+          <velocity>0.2</velocity>
+          <lower>0</lower>
+          <upper>0.04</upper>
+        </limit>
+        <xyz>0 0 1</xyz>
+      </axis>
+    </joint>
+
+    <joint name="right" type="prismatic">
+      <child>right_claw</child>
+      <parent>base_arm</parent>
+      <axis>
+        <limit>
+          <velocity>0.2</velocity>
+          <lower>-0.04</lower>
+          <upper>0</upper>
+        </limit>
+        <xyz>0 0 -1</xyz>
+      </axis>
+    </joint>
+  </model>
+</sdf>
