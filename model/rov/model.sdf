@@ -1,3 +1,4 @@
+<?xml version="1.0"?>
 <sdf version="1.6">
   <model name="rov">
     <!--static>true</static-->
@@ -42,7 +43,7 @@
         </plugin>
       </sensor>
     </link>
-    <plugin name="simple_ROV_control" filename="libsimple_ROV_plugin.so"/>
+    <plugin name="rov_plugin" filename="librov_plugin.so"/>
     <plugin name="BuoyancyPlugin" filename="libBuoyancyPlugin.so">
       <link name="link">
         <center_of_volume>0 0 0.01</center_of_volume>
