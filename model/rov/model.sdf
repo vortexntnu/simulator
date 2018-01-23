@@ -43,6 +43,13 @@
         </plugin>
       </sensor>
     </link>
+
+    <plugin name="imu_control" filename="libhector_gazebo_ros_imu.so">
+      <updateRate>5</updateRate>
+      <bodyName>link</bodyName>
+      <topicName>/sensors/imu/data</topicName>
+    </plugin>
+
     <plugin name="rov_plugin" filename="librov_plugin.so"/>
     <plugin name="BuoyancyPlugin" filename="libBuoyancyPlugin.so">
       <link name="link">
