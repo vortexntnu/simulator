@@ -68,7 +68,7 @@ namespace gazebo
       this->torque = torque_msg;
 
       bool mode = this->link->GetGravityMode();
-/*
+
       ROS_INFO("Force [%f,%f,%f], Torque [%f,%f,%f]",force.x, force.y, force.z,
 torque.x, torque.y, torque.z);
       math::Vector3 force_debug = this->link->GetRelativeForce();
@@ -76,13 +76,13 @@ torque.x, torque.y, torque.z);
 
       ROS_INFO("DBG_F [%f, %f, %f], DBG_T [%f,%f,%f]", force_debug.x,
 force_debug.y, force_debug.z, torque_debug.x, torque_debug.y, torque_debug.z);
-*/
 
-      this->fluidPressure.fluid_pressure = (50 - this->pose.pos.z)*1000*9.810665 + 101300;
+
+      this->fluidPressure.fluid_pressure = -((50 -
+this->pose.pos.z)*1000*9.810665 + 101300);
       this->rosPub.publish(this->fluidPressure);
       // ADVERTISE fluidPressure here!
-      std::cout << "[x,y,z , r,p,y] = " << this->pose << ", z = " <<
-this->pose.pos.z << std::endl;
+
     }
 
 
