@@ -2,28 +2,26 @@
 #include <gazebo/gazebo.hh>
 #include <gazebo/physics/physics.hh>
 #include <gazebo/common/common.hh>
+
 #include <stdio.h>
 #include <stdlib.h>
 
 #include <thread>
 #include "ros/ros.h"
 #include "geometry_msgs/Wrench.h"
+#include "sensor_msgs/FluidPressure.h"
 
 namespace gazebo
 {
-  class MountedRov : public ModelPlugin
+  class Rov : public ModelPlugin
   {
-    public: void Load(physics::ModelPtr _parent, sdf::ElementPtr /*_sdf*/)
+    public: void Load(physics::ModelPtr _parent, sdf::ElementPtr)
     {
-      ROS_INFO("MountedRov plugin success!");
       this->model = _parent;
       this->link = model->GetLink("link");
       this->inertial = link->GetInertial();
       this->updateConnection = event::Events::ConnectWorldUpdateBegin(
-          boost::bind(&MountedRov::OnUpdate, this, _1));
-      // LEFT CLAW IS 0, RIGHT CLAW IS 1
-      this->claws = link->GetChildJointsLinks()[0]->GetChildJoints();
-
+          boost::bind(&Rov::OnUpdate, this, _1));
 
       if (!ros::isInitialized())
       {
@@ -31,17 +29,17 @@ namespace gazebo
         char **argv = NULL;
         ros::init(argc, argv, "gazebo_client");
       }
+
       this->rosNode.reset(new ros::NodeHandle("gazebo_client"));
-      this->rosSub_wrench = this->rosNode->subscribe("/rov_forces", 10, &MountedRov::OnRosMsg, this);
-      this->rosSub_manipulator =
-this->rosNode->subscribe("/manipulator_command", 10,
-&MountedRov::OnManipulatorCommand)
+      this->rosSub = this->rosNode->subscribe("/rov_forces", 10, &Rov::OnRosMsg, this);
+      this->rosPub = this->rosNode->advertise<sensor_msgs::FluidPressure>("/sensors/pressure",10);
 
       this->linFrictionCoef  = math::Vector3(80,80,203);
       this->angFrictionCoef = math::Vector3(1,1,1);
       this->forceSign = math::Vector3(1,-1,1);
       this->torqueSign = math::Vector3(1,-1,-1);
     }
+
 
     public: void OnUpdate(const common::UpdateInfo & /*_info*/)
     {
@@ -56,8 +54,10 @@ this->rosNode->subscribe("/manipulator_command", 10,
       this->link->AddRelativeForce(-linFriction);
       this->link->AddRelativeTorque(-angFriction);
 
-      if()
+      this->pose = this->link->GetWorldCoGPose();
+
     }
+
 
     public: void OnRosMsg(const geometry_msgs::Wrench &_msg)
     {
@@ -67,6 +67,8 @@ this->rosNode->subscribe("/manipulator_command", 10,
       this->force = force_msg;
       this->torque = torque_msg;
 
+      bool mode = this->link->GetGravityMode();
+
       ROS_INFO("Force [%f,%f,%f], Torque [%f,%f,%f]",force.x, force.y, force.z,
 torque.x, torque.y, torque.z);
       math::Vector3 force_debug = this->link->GetRelativeForce();
@@ -74,18 +76,29 @@ torque.x, torque.y, torque.z);
 
       ROS_INFO("DBG_F [%f, %f, %f], DBG_T [%f,%f,%f]", force_debug.x,
 force_debug.y, force_debug.z, torque_debug.x, torque_debug.y, torque_debug.z);
+
+
+      this->fluidPressure.fluid_pressure = -((50 -
+this->pose.pos.z)*1000*9.810665 + 101300);
+      this->rosPub.publish(this->fluidPressure);
+      // ADVERTISE fluidPressure here!
+
     }
+
 
     private: physics::ModelPtr model;
     private: physics::LinkPtr link;
     private: physics::InertialPtr inertial;
-    private: physics::Link_V armBase;
-    private: physics::Joint_V claws;
     private: event::ConnectionPtr updateConnection;
 
     private: std::unique_ptr<ros::NodeHandle> rosNode;
     private: ros::Subscriber rosSub;
+    private: ros::Publisher rosPub;
 
+    private: math::Pose pose;
+
+    private: sensor_msgs::FluidPressure fluidPressure;
+//    private: geometry_msgs::SlettMeg;
 
     private: math::Vector3 force;
     private: math::Vector3 torque;
@@ -97,5 +110,5 @@ force_debug.y, force_debug.z, torque_debug.x, torque_debug.y, torque_debug.z);
     private: math::Vector3 torqueSign;
   };
 
-  GZ_REGISTER_MODEL_PLUGIN(MountedRov)
+  GZ_REGISTER_MODEL_PLUGIN(Rov)
 }
