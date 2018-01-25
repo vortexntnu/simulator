@@ -1,0 +1,63 @@
+<?xml version="1.0"?>
+<sdf version="1.6">
+  <model name="rov">
+    <!--static>true</static-->
+    <link name="link">
+      <inertial>
+        <inertia>
+          <ixx>0.037</ixx>
+          <ixy>0.0</ixy>
+          <ixz>0.0</ixz>
+          <iyy>0.037</iyy>
+          <iyz>0.0</iyz>
+          <izz>0.127</izz>
+        </inertia>
+        <mass>20.0</mass>
+      </inertial>
+      <collision name="collision">
+        <geometry>
+          <mesh>
+            <scale>1 1 1</scale>
+            <uri>model://rov/meshes/ROV-skall.dae</uri>
+          </mesh>
+        </geometry>
+      </collision>
+      <visual name="visual">
+        <geometry>
+          <mesh>
+            <scale>1 1 1</scale>
+            <uri>model://rov/meshes/ROV-skall.dae</uri>
+          </mesh>
+        </geometry>
+      </visual>
+      <sensor name="camera" type="camera">
+        <!--frame name="camera_frame">
+          <pose frame="camera_frame"> 0.2 0 0  0 0 0 </pose>
+        </frame-->
+        <pose> 0.2 0 0  0 0 0 </pose>
+        <update_rate>25</update_rate>
+        <plugin name="camera_plugin" filename="libgazebo_ros_camera.so">
+          <imageTopicName>image_raw</imageTopicName>
+          <cameraName>camera</cameraName>
+          <frameName>camera_frame</frameName>
+        </plugin>
+      </sensor>
+    </link>
+
+    <plugin name="imu_control" filename="libhector_gazebo_ros_imu.so">
+      <updateRate>5</updateRate>
+      <bodyName>link</bodyName>
+      <topicName>/sensors/imu/data</topicName>
+    </plugin>
+
+    <plugin name="rov_plugin" filename="librov_plugin.so"/>
+    <plugin name="BuoyancyPlugin" filename="libBuoyancyPlugin.so">
+      <link name="link">
+        <center_of_volume>0 0 0.01</center_of_volume>
+        <volume>0.0202</volume>
+      </link>      
+    </plugin>
+
+  </model>
+</sdf>
+

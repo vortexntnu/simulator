@@ -1,0 +1,178 @@
+<?xml version="1.0"?>
+<sdf version="1.6">
+  <model name="mounted_rov">
+    <!--static>true</static-->
+    <link name="link">
+      <inertial>
+        <inertia>
+          <ixx>0.037</ixx>
+          <ixy>0.0</ixy>
+          <ixz>0.0</ixz>
+          <iyy>0.037</iyy>
+          <iyz>0.0</iyz>
+          <izz>0.127</izz>
+        </inertia>
+        <mass>20.0</mass>
+      </inertial>
+      <collision name="collision">
+        <geometry>
+          <mesh>
+            <scale>1 1 1</scale>
+            <uri>model://mounted_rov/meshes/ROV-skall.dae</uri>
+          </mesh>
+        </geometry>
+      </collision>
+      <visual name="visual">
+        <geometry>
+          <mesh>
+            <scale>1 1 1</scale>
+            <uri>model://mounted_rov/meshes/ROV-skall.dae</uri>
+          </mesh>
+        </geometry>
+      </visual>
+      <sensor name="camera" type="camera">
+        <!--frame name="camera_frame">
+          <pose frame="camera_frame"> 0.2 0 0  0 0 0 </pose>
+        </frame-->
+        <pose> 0.2 0 0  0 0 0 </pose>
+        <update_rate>25</update_rate>
+        <plugin name="camera_plugin" filename="libgazebo_ros_camera.so">
+          <imageTopicName>image_raw</imageTopicName>
+          <cameraName>camera</cameraName>
+          <frameName>camera_frame</frameName>
+        </plugin>
+      </sensor>
+    </link>
+
+    <link name="base_arm">
+      <pose>0.23 0 -0.07 0 0 0</pose>
+      <inertial>
+        <mass>0.5</mass>
+      </inertial>
+      <collision name='collision'>
+        <geometry>
+          <box>
+            <size>.05 .2 .03</size>
+          </box>
+        </geometry>
+      </collision>
+      <visual name='visual'>
+        <geometry>
+          <box>
+            <size>.05 .2 .03</size>
+          </box>
+        </geometry>
+      </visual>
+    </link>
+    
+    <link name="left_claw">
+      <pose>0.23 0.01 -0.085  1.5707 0 3.1415</pose>
+      <inertial>
+        <inertia>
+          <ixx>0.01</ixx>
+          <ixy>0</ixy>
+          <ixz>0</ixz>
+          <iyy>0.01</iyy>
+          <iyz>0</iyz>
+          <izz>0.01</izz>
+        </inertia>
+        <mass>0.01</mass>
+      </inertial>
+      <collision name="left_collision">
+        <geometry>
+          <mesh>
+            <scale>.1 .1 .1</scale>
+            <uri>model://manipulator_arm/meshes/manipulator_claw.dae</uri>
+          </mesh>
+        </geometry>
+      </collision>
+      <visual name="left_visual">
+        <geometry>
+          <mesh>
+            <scale>.1 .1 .1</scale>
+            <uri>model://manipulator_arm/meshes/manipulator_claw.dae</uri>
+          </mesh>
+        </geometry>
+      </visual>
+    </link>
+
+    <link name="right_claw">
+      <pose>0.23 -0.01 -0.075  -1.5707 0 3.1514</pose>
+      <inertial>
+        <inertia>
+          <ixx>0.01</ixx>
+          <ixy>0</ixy>
+          <ixz>0</ixz>
+          <iyy>0.01</iyy>
+          <iyz>0</iyz>
+          <izz>0.01</izz>
+        </inertia>
+        <mass>0.01</mass>
+      </inertial>
+      <collision name="right_collision">
+        <geometry>
+          <mesh>
+            <scale>.1 .1 .1</scale>
+            <uri>model://mounted_rov/meshes/manipulator_claw.dae</uri>
+          </mesh>
+        </geometry>
+      </collision>
+      <visual name="right_visual">
+        <geometry>
+          <mesh>
+            <scale>.1 .1 .1</scale>
+            <uri>model://mounted_rov/meshes/manipulator_claw.dae</uri>
+          </mesh>
+        </geometry>
+      </visual>
+    </link>
+
+    <joint name="left" type="prismatic">
+      <child>left_claw</child>
+      <parent>base_arm</parent>
+      <axis>
+        <limit>
+          <velocity>0.2</velocity>
+          <lower>-0.01</lower>
+          <upper>0.04</upper>
+        </limit>
+        <xyz>0 0 1</xyz>
+      </axis>
+    </joint>
+
+    <joint name="right" type="prismatic">
+      <child>right_claw</child>
+      <parent>base_arm</parent>
+      <axis>
+        <limit>
+          <velocity>0.2</velocity>
+          <lower>-0.04</lower>
+          <upper>0.01</upper>
+        </limit>
+        <xyz>0 0 -1</xyz>
+      </axis>
+    </joint>
+
+    <joint name="rov_base_link" type="revolute">
+      <child>base_arm</child>
+      <parent>link</parent>
+      <axis>
+        <limit>
+          <lower>0</lower>
+          <upper>0</upper>
+        </limit>
+        <xyz>1 0 0</xyz>
+      </axis>
+    </joint>
+
+    <plugin name="mounted_rov_control" filename="libmounted_rov_plugin.so"/>
+    <plugin name="BuoyancyPlugin" filename="libBuoyancyPlugin.so">
+      <link name="link">
+        <center_of_volume>0 0 0.01</center_of_volume>
+        <volume>0.0202</volume>
+      </link>      
+    </plugin>
+
+  </model>
+</sdf>
+

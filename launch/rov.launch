@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+<launch>
+  <!-- Environment variables -->
+  <env name="GAZEBO_MODEL_PATH" value="$(find Simulator)/model/"/>
+  <env name="GAZEBO_PLUGIN_PATH" value="$(find Simulator)/model/rov/plugins/"/>
+
+  <!-- Open empty world and add simple_ROV.world -->
+  <include file="$(find gazebo_ros)/launch/empty_world.launch">
+    <arg name="world_name" value="$(find Simulator)/worlds/rov.world"/>
+    <!-- more default parameters can be changed here -->
+
+  </include>
+  
+  <arg name="camera" default="1"/>
+  <group if="$(arg camera)">
+    <node name="image_view" pkg="image_view" type="image_view">
+    <remap from="image" to="/camera/image_raw/" />
+    </node>
+  </group>
+</launch>

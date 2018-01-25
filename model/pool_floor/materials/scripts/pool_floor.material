@@ -1,0 +1,14 @@
+material PoolFloor/Image
+{
+  technique
+  {
+    pass
+    {
+      texture_unit
+      {
+        texture poolTiles.png
+        scale 0.05 0.05
+      }
+    }
+  }
+}
