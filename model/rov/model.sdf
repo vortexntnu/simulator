@@ -34,6 +34,13 @@
         <!--frame name="camera_frame">
           <pose frame="camera_frame"> 0.2 0 0  0 0 0 </pose>
         </frame-->
+        <camera>
+          <image>
+            <width>1920</width>
+            <height>1080</height>
+          </image>
+        </camera>
+
         <pose> 0.2 0 0  0 0 0 </pose>
         <update_rate>25</update_rate>
         <plugin name="camera_plugin" filename="libgazebo_ros_camera.so">
