@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<sdf version="1.6">
+  <model name="net">
+    <static>true</static>
+    <link name="link">
+      <visual name="body">
+        <cast_shadows>0</cast_shadows>
+        <geometry>
+          <mesh>
+            <!--scale>0.1 0.1 0.1</scale-->
+            <uri>model://net/meshes/test_not.dae</uri>
+          </mesh>
+        </geometry>
+      </visual>
+    </link>
+  </model>
+</sdf>

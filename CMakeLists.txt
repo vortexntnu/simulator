@@ -2,20 +2,25 @@ cmake_minimum_required(VERSION 2.8 FATAL_ERROR)
 
 project(Simulator)
 
-find_package(roscpp REQUIRED)
-find_package(geometry_msgs REQUIRED)
-find_package(sensor_msgs REQUIRED)
-include_directories(${roscpp_INCLUDE_DIRS})
-include_directories(${geometry_msgs_INCLUDE_DIRS})
-include_directories(${sensor_msgs_INCLUDE_DIRS})
+add_definitions(-std=c++11)
 
+find_package(catkin REQUIRED COMPONENTS
+  roscpp
+  geometry_msgs
+  sensor_msgs
+  gazebo
+  message_generation
+)
 
-# Find Gazebo
-find_package(gazebo REQUIRED)
-include_directories(${GAZEBO_INCLUDE_DIRS})
+include_directories(
+  include
+  ${roscpp_INCLUDE_DIRS}
+  ${gemoetry_msgs_INCLUDE_DIRS}
+  ${sensor_msgs_INCLUDE_DIRS}
+  ${GAZEBO_INCLUDE_DIRS}
+)
+
 link_directories(${GAZEBO_LIBRARY_DIRS})
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${GAZEBO_CXX_FLAGS}")
 
-# Build plugins
 add_library(rov_plugin SHARED src/rov_plugin.cc)
 add_library(mounted_rov_plugin SHARED src/mounted_rov_plugin.cc)
