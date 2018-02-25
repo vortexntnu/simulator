@@ -4,11 +4,11 @@ project(Simulator)
 
 add_definitions(-std=c++11)
 
+find_package(gazebo REQUIRED)
 find_package(catkin REQUIRED COMPONENTS
   roscpp
   geometry_msgs
   sensor_msgs
-  gazebo
   message_generation
 )
 
