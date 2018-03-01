@@ -1,14 +1,14 @@
 <?xml version="1.0"?>
 <launch>
   <!-- Environment variables -->
-  <env name="GAZEBO_MODEL_PATH" value="$(find Simulator)/model/"/>
-  <env name="GAZEBO_PLUGIN_PATH" value="$(find Simulator)/model/mounted_rov/plugins/"/>
+  <env name="GAZEBO_MODEL_PATH" value="$(find simulator)/model/"/>
+  <env name="GAZEBO_PLUGIN_PATH" value="$(find simulator)/model/mounted_rov/plugins/"/>
 
 
 
   <!-- Open empty world and add simple_ROV.world -->
   <include file="$(find gazebo_ros)/launch/empty_world.launch">
-    <arg name="world_name" value="$(find Simulator)/worlds/mounted_rov.world"/>
+    <arg name="world_name" value="$(find simulator)/worlds/mounted_rov.world"/>
     <!-- more default parameters can be changed here -->
 
   </include>
