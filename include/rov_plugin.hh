@@ -2,8 +2,6 @@
 #include <gazebo/physics/physics.hh>
 #include <gazebo/common/common.hh>
 
-#include <stdlib.h>
-
 #include "ros/ros.h"
 #include "geometry_msgs/Wrench.h"
 #include "sensor_msgs/FluidPressure.h"
@@ -14,31 +12,29 @@ namespace gazebo
   {
     public:
       void Load(physics::ModelPtr _parent, sdf::ElementPtr);
-      void OnUpdate(const common::UpdateInfo &);
-      void OnRosMsg(const geometry_msgs::Wrench &_msg);
-      void simple_callback(const ros::TimerEvent&);
+      void simulationCallback(const common::UpdateInfo &);
+      void rovForceCallback(const geometry_msgs::Wrench &_msg);
+      void timerCallback(const ros::TimerEvent&);
     private:
-      physics::ModelPtr                 model;
-      physics::LinkPtr                  link;
-      event::ConnectionPtr              updateConnection;
+      physics::ModelPtr                 m_model;
+      physics::LinkPtr                  m_link;
+      event::ConnectionPtr              m_updateConnection;
 
-      std::unique_ptr<ros::NodeHandle>  rosNode;
-      ros::Subscriber                   rosSub;
-      ros::Publisher                    rosPub;
-      ros::Timer                        rosTimer;
+      std::unique_ptr<ros::NodeHandle>  m_nh;
+      ros::Subscriber                   m_rovForcesSub;
+      ros::Publisher                    m_pressurePub;
+      ros::Timer                        m_timer;
 
-      math::Pose                        pose;
+      math::Vector3                     m_pose;
 
-      sensor_msgs::FluidPressure fluidPressure;
+      sensor_msgs::FluidPressure        m_pressure;
 
-      math::Vector3                     force;
-      math::Vector3                     torque;
+      math::Vector3                     m_force;
+      math::Vector3                     m_torque;
 
-      math::Vector3                     linFrictionCoef;
-      math::Vector3                     angFrictionCoef;
+      const math::Vector3               c_linearDragCoeff = math::Vector3(80, 80, 204);
+      const math::Vector3               c_angularDragCoeff = math::Vector3(1, 1, 1);
 
-      math::Vector3                     forceSign;
-      math::Vector3                     torqueSign;
   };
   GZ_REGISTER_MODEL_PLUGIN(Rov)
 }
