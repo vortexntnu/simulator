@@ -8,9 +8,10 @@ find_package(catkin REQUIRED COMPONENTS
   roscpp
   geometry_msgs
   sensor_msgs
-  gazebo
   message_generation
 )
+
+find_package(gazebo REQUIRED)
 
 include_directories(
   include
