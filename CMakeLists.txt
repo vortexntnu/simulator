@@ -17,6 +17,8 @@ catkin_package(
   INCLUDE_DIRS include
 )
 
+find_package(gazebo REQUIRED)
+
 include_directories(
   include
   ${roscpp_INCLUDE_DIRS}
